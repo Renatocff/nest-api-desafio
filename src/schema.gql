@@ -16,15 +16,35 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type User {
+  id: ID!
+  usuario: String!
+  ativo: Boolean
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type AuthType {
+  user: User!
+  token: String!
+}
+
 type Query {
   simplePosts: [SimplePost!]!
   simplePost(id: Float!): SimplePost!
+  users: [User!]!
+  findUserByUsername(usuario: String!): User!
+  findUsuarioById(id: Float!): User!
 }
 
 type Mutation {
   createSimplePost(data: CreateSimplePostInput!): SimplePost!
   updateSimplePost(id: Float!, data: UpdateSimplePostInput!): SimplePost!
   deleteSimplePostById(id: Float!): Boolean!
+  createUser(data: CreateUserInput!): User!
+  UpdateUser(id: Float!, data: UpdateUserInput!): User!
+  deleteUserById(id: Float!): Boolean!
+  login(data: AuthInput!): AuthType!
 }
 
 input CreateSimplePostInput {
@@ -35,4 +55,19 @@ input CreateSimplePostInput {
 input UpdateSimplePostInput {
   text: String
   date: DateTime
+}
+
+input CreateUserInput {
+  usuario: String!
+  senha: String!
+}
+
+input UpdateUserInput {
+  senha: String
+  ativo: Boolean
+}
+
+input AuthInput {
+  usuario: String!
+  senha: String!
 }

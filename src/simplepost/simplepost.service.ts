@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateSimplePostInput } from './dto/create-simplepost.input';
@@ -18,10 +18,10 @@ export class SimplepostService {
     }
 
     async findSimplePostById(id: number): Promise<SimplePost> {
-        const simplepost = this.simplePostRepository.findOne({ where: { id } });
+        const simplepost = await this.simplePostRepository.findOne({ where: { id } });
 
         if (!simplepost) {
-            throw new NotFoundException('post not found.');
+            return new SimplePost();
         }
 
         return simplepost;

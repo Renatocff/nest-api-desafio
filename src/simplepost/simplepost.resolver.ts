@@ -1,4 +1,6 @@
+import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { GqlAuthGuard } from 'src/auth/auth.guard';
 import { CreateSimplePostInput } from './dto/create-simplepost.input';
 import { UpdateSimplePostInput } from './dto/update-simplepost.input';
 import { SimplePost } from './simplepost.entity';
@@ -11,12 +13,14 @@ export class SimplepostResolver {
     ) { }
 
     @Query(() => [SimplePost])
+    @UseGuards(GqlAuthGuard)
     async simplePosts(): Promise<SimplePost[]> {
         const simplePosts = await this.simplePostService.findAllSimplePosts();
         return simplePosts;
     }
 
     @Query(() => SimplePost)
+    @UseGuards(GqlAuthGuard)
     async simplePost(
         @Args('id') id: number
     ): Promise<SimplePost> {
@@ -25,6 +29,7 @@ export class SimplepostResolver {
     }
 
     @Mutation(() => SimplePost)
+    @UseGuards(GqlAuthGuard)
     async createSimplePost(
         @Args('data') data: CreateSimplePostInput
     ): Promise<SimplePost> {
@@ -33,6 +38,7 @@ export class SimplepostResolver {
     }
 
     @Mutation(() => SimplePost)
+    @UseGuards(GqlAuthGuard)
     async updateSimplePost(
         @Args('id') id: number,
         @Args('data') data: UpdateSimplePostInput
@@ -42,6 +48,7 @@ export class SimplepostResolver {
     }
 
     @Mutation(() => Boolean)
+    @UseGuards(GqlAuthGuard)
     async deleteSimplePostById(
         @Args('id') id: number
     ): Promise<Boolean> {

@@ -7,23 +7,32 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { SimplepostModule } from './simplepost/simplepost.module';
 import { SimplePost } from './simplepost/simplepost.entity';
+import { ConfigModule } from '@nestjs/config';
+import { UserModule } from './user/user.module';
+import { User } from './user/user.entity';
+import { AuthModule } from './auth/auth.module';
+
+const teste = process.env.HOST;
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true
+    }),
     TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'ec2-54-172-17-119.compute-1.amazonaws.com',
+      type: "postgres",
+      host: process.env.HOST_DB,
       port: 5432,
-      username: 'srrfvbhquuxvyn',
-      password: '29de0a6e9177a396ac5fc9e28762c0b5e497b8edd60775f737c693a864926958',
-      database: 'ddfo8dr0sh9dsi',
+      username: process.env.USERNAME_DB,
+      password: process.env.PASSWORD_DB,
+      database: process.env.DATABASE,
       ssl: true,
       extra: {
         ssl: {
           rejectUnauthorized: false
         }
       },
-      entities: [SimplePost],
+      entities: [SimplePost, User],
       synchronize: false,
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -33,6 +42,8 @@ import { SimplePost } from './simplepost/simplepost.entity';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
     }),
     SimplepostModule,
+    UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
